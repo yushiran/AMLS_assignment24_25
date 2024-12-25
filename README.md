@@ -33,20 +33,18 @@ In this project, two models were trained for these classification tasks: ResNet1
 ├── A
 │   ├── A_main.py          # Main script for Task A.
 │   ├── A_model            # Directory containing trained models and related files for Task A.
-│   │   ├── ResNet18_2024-12-24 19:40:03.239511  # Directory for ResNet18 model trained on 2024-12-24.
-│   │   └── ViT_2024-12-25 01:13:58.738999       # Directory for ViT model trained on 2024-12-25.
+│   │   ├── ResNet18_2024-12-25 15:09:51.435892  # Directory for ResNet18 model trained on 2024-12-24.
+│   │   └── ViT_2024-12-25 15:12:32.084710       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the A module.
-│   ├── __pycache__         # Compiled Python files.
 │   ├── docs                # Documentation and images related to Task A.
 │   │   └── breastmnist_train_montage.jpg  # Montage of training images for BreastMNIST.
 │   └── model.py            # Model definitions for Task A.
 ├── B
 │   ├── B_main.py          # Main script for Task B.
 │   ├── B_model            # Directory containing trained models and related files for Task B.
-│   │   ├── ResNet18_2024-12-25 01:26:31.548702  # Directory for ResNet18 model trained on 2024-12-25.
+│   │   ├── ResNet18_2024-12-25 15:20:01.738181  # Directory for ResNet18 model trained on 2024-12-25.
 │   │   └── ViT_2024-12-25 01:39:40.440155       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the B module.
-│   ├── __pycache__         # Compiled Python files.
 │   ├── docs                # Documentation and images related to Task B.
 │   │   └── bloodmnist_train_montage.jpg  # Montage of training images for BloodMNIST.
 │   └── model.py            # Model definitions for Task B.

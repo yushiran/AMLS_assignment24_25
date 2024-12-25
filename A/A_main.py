@@ -31,8 +31,7 @@ import matplotlib.pyplot as plt
 from linformer import Linformer
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from model import ResNet18
-from model import ViT
+from model import ResNet18,ViT,AlexNetModel
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -78,7 +77,7 @@ def A_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='R
     # encapsulate data into dataloader form
     train_loader = data.DataLoader(dataset=train_dataset, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = data.DataLoader(dataset=val_dataset, batch_size=BATCH_SIZE, shuffle=False)
-    # train_loader_at_eval = data.DataLoader(dataset=train_dataset, batch_size=2*BATCH_SIZE, shuffle=False)
+    train_loader_at_eval = data.DataLoader(dataset=train_dataset, batch_size=2*BATCH_SIZE, shuffle=False)
     test_loader = data.DataLoader(dataset=test_dataset, batch_size=2*BATCH_SIZE, shuffle=False)
 
     train_evaluator = medmnist.Evaluator(data_flag, 'train')
@@ -89,19 +88,19 @@ def A_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='R
     if train_or_test == 'train':
         return train(train_model,data_flag=data_flag,device=device,n_channels=n_channels,n_classes=n_classes,task=task,
                     train_loader=train_loader,val_loader=val_loader,test_loader=test_loader,
-                    train_evaluator=test_evaluator,val_evaluator=val_evaluator,test_evaluator=test_evaluator)
+                    train_evaluator=train_evaluator,train_loader_at_eval=train_loader_at_eval,val_evaluator=val_evaluator,test_evaluator=test_evaluator)
     # test the model
     elif train_or_test == 'test':
         return inference(model_path=model_path,data_flag=data_flag,device=device,
                         n_channels=n_channels,n_classes=n_classes,task=task,
                         train_loader=train_loader,val_loader=val_loader,test_loader=test_loader,
-                        train_evaluator=test_evaluator,val_evaluator=val_evaluator,test_evaluator=test_evaluator)
+                        train_evaluator=train_evaluator,val_evaluator=val_evaluator,test_evaluator=test_evaluator)
 
     return 0
 
 def train(train_model:str,data_flag:str,device,
           n_channels,n_classes,
-          task,train_loader,val_loader,test_loader,
+          task,train_loader,train_loader_at_eval,val_loader,test_loader,
           train_evaluator,val_evaluator,test_evaluator):
     """
     Function to train the model on the specified dataset.
@@ -152,6 +151,9 @@ def train(train_model:str,data_flag:str,device,
                     transformer=efficient_transformer,
                     channels=n_channels,
                 )
+    elif train_model == 'VGG11':
+        lr = 0.001
+        model = AlexNetModel(in_channels=n_channels, num_classes=n_classes)
     else:
         raise NotImplementedError
     
@@ -176,6 +178,10 @@ def train(train_model:str,data_flag:str,device,
 
     train_loss = []
     val_loss = []
+    train_auc = []
+    train_acc = []
+    val_auc = []
+    val_acc = []
     progress_bar = trange(NUM_EPOCHS, desc="Training", unit="epoch")
     for epoch in progress_bar:           
         total_loss = []
@@ -198,9 +204,14 @@ def train(train_model:str,data_flag:str,device,
         epoch_loss = sum(total_loss)/len(total_loss) 
         train_loss.append(epoch_loss)
         
+        train_metrics = test(model, train_evaluator, train_loader_at_eval, task, criterion, device)
+        train_auc.append(train_metrics[1])
+        train_acc.append(train_metrics[2])
         val_metrics = test(model, val_evaluator, val_loader, task, criterion, device)
         test_metrics = test(model, test_evaluator, test_loader, task, criterion, device)
         val_loss.append(val_metrics[0])
+        val_auc.append(val_metrics[1])
+        val_acc.append(val_metrics[2])
         
         scheduler.step()
             
@@ -249,6 +260,36 @@ def train(train_model:str,data_flag:str,device,
 
     # Save the plot
     plot_path = os.path.join(output_root, 'loss_plot.png')
+    plt.savefig(plot_path)
+    plt.close()
+
+    # Plot train and validation AUC
+    plt.figure()
+    plt.plot(train_auc, label='Train AUC')
+    plt.plot(val_auc, label='Validation AUC')
+    plt.xlabel('Epochs')
+    plt.ylabel('AUC')
+    plt.title('Train and Validation AUC')
+    plt.legend()
+    plt.grid(True)
+
+    # Save the plot
+    plot_path = os.path.join(output_root, 'auc_plot.png')
+    plt.savefig(plot_path)
+    plt.close()
+
+    # Plot train and validation accuracy
+    plt.figure()
+    plt.plot(train_acc, label='Train Accuracy')
+    plt.plot(val_acc, label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.title('Train and Validation Accuracy')
+    plt.legend()
+    plt.grid(True)
+
+    # Save the plot
+    plot_path = os.path.join(output_root, 'accuracy_plot.png')
     plt.savefig(plot_path)
     plt.close()
     
@@ -369,14 +410,16 @@ def inference(model_path, data_flag, device,
 
 
 if __name__ == '__main__':
-    train_or_test = 'test'
-    # train_or_test = 'train'
+    # train_or_test = 'test'
+    train_or_test = 'train'
     # train_model = 'ResNet18'
-    train_model = 'ViT'
+    # train_model = 'ViT'
+    train_model = 'VGG11'
     BATCH_SIZE = 8
     data_flag = 'breastmnist'
-    # model_path = 'ResNet18_2024-12-24 19:40:03.239511'
-    model_path = 'ViT_2024-12-25 01:13:58.738999'
+    # model_path = 'ResNet18_2024-12-25 15:09:51.435892'
+    # model_path = 'ViT_2024-12-25 15:12:32.084710'
+    model_path = 'VGG16_2024-12-25 15:09:51.435892'
  
     A_main_function(BATCH_SIZE=BATCH_SIZE,
                     train_or_test=train_or_test, 
