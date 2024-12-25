@@ -25,7 +25,7 @@ This project is part of the AMLS assignment for the academic year 2024-2025. It 
 
 The datasets are accessible at [MedMNIST](https://medmnist.com/).
 
-In this project, two models were trained for these classification tasks: ResNet18 and Vision Transformer (ViT). The ViT model is based on the implementation from this [ViT Pytorch project](https://github.com/lucidrains/vit-pytorch).
+In this project, four models were trained for these classification tasks: ResNet18, Vision Transformer (ViT), Support Vector Machine (SVM), and Random Forest. The ViT model is based on the implementation from this [ViT Pytorch project](https://github.com/lucidrains/vit-pytorch).
 
 ## File Descriptions
 ### Root Directory
@@ -33,7 +33,8 @@ In this project, two models were trained for these classification tasks: ResNet1
 ├── A
 │   ├── A_main.py          # Main script for Task A.
 │   ├── A_model            # Directory containing trained models and related files for Task A.
-│   │   ├── ResNet18_2024-12-25 15:09:51.435892  # Directory for ResNet18 model trained on 2024-12-24.
+│   │   ├── ResNet18_2024-12-25 15:09:51.435892  # Directory for ResNet18 model trained on 2024-12-25.
+│   │   ├── SVM_2024-12-25 17:47:43.290416       # Directory for SVM model trained on 2024-12-25.
 │   │   └── ViT_2024-12-25 15:12:32.084710       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the A module.
 │   ├── docs                # Documentation and images related to Task A.
@@ -43,11 +44,12 @@ In this project, two models were trained for these classification tasks: ResNet1
 │   ├── B_main.py          # Main script for Task B.
 │   ├── B_model            # Directory containing trained models and related files for Task B.
 │   │   ├── ResNet18_2024-12-25 15:20:01.738181  # Directory for ResNet18 model trained on 2024-12-25.
+│   │   ├── RF_2024-12-25 18:10:31.138830        # Directory for Random forest model trained on 2024-12-25.
 │   │   └── ViT_2024-12-25 15:36:47.570820       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the B module.
 │   ├── docs                # Documentation and images related to Task B.
 │   │   └── bloodmnist_train_montage.jpg  # Montage of training images for BloodMNIST.
-│   └── model.py            # Model definitions for Task B.
+│   └── B_model.py            # Model definitions for Task B.
 ├── Datasets               # Directory for storing datasets.
 ├── LICENSE                # License file for the project.
 ├── README.md              # Project overview and instructions.
@@ -91,7 +93,9 @@ This will start the process and run the necessary scripts for both Task A and Ta
 
 | Task  | Model       | AUC           | Accuracy       |
 |-------|-------------|---------------|----------------|
-| Task A| ResNet18    | 0.9094611528822055 | 0.8589743589743589 |
-| Task A| ViT         | 0.7650375939849625 | 0.7756410256410257 |
-| Task B| ResNet18    | 0.9977018782434641 | 0.960830166617948  |
-| Task B| ViT         | 0.9819938178368712 | 0.8500438468284127 |
+| Task A| ResNet18    | 0.8759398496240602 | 0.8589743589743589 |
+| Task A| ViT         | 0.7410192147034252 | 0.7692307692307693 |
+| Task A| SVM         | 0.6904761904761906 | 0.7564102564102564 |
+| Task B| ResNet18    | 0.9973645786078182 | 0.9555685472084186 |
+| Task B| ViT         | 0.9828683449477108 | 0.8517977199649225 |
+| Task B| RF          | 0.9742410136198443 | 0.8310435545162234 |
