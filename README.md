@@ -43,7 +43,7 @@ In this project, two models were trained for these classification tasks: ResNet1
 │   ├── B_main.py          # Main script for Task B.
 │   ├── B_model            # Directory containing trained models and related files for Task B.
 │   │   ├── ResNet18_2024-12-25 15:20:01.738181  # Directory for ResNet18 model trained on 2024-12-25.
-│   │   └── ViT_2024-12-25 01:39:40.440155       # Directory for ViT model trained on 2024-12-25.
+│   │   └── ViT_2024-12-25 15:36:47.570820       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the B module.
 │   ├── docs                # Documentation and images related to Task B.
 │   │   └── bloodmnist_train_montage.jpg  # Montage of training images for BloodMNIST.

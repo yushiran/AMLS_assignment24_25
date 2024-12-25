@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
 from linformer import Linformer
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from model import ResNet18,ViT,AlexNetModel
+from model import ResNet18,ViT
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
