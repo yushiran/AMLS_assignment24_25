@@ -46,3 +46,4 @@ tqdm
 einops
 vit_pytorch 
 linformer
+matplotlib
