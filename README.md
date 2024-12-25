@@ -20,7 +20,7 @@ This project is part of the AMLS assignment for the academic year 2024-2025. It 
 <p align="center">
     <img src="B/docs/bloodmnist_train_montage.jpg" alt="BloodMNIST Training Montage">
 </p>
-<p align="center"><b>Figure 1: BloodMNIST Training Montage</b></p>
+<p align="center"><b>Figure 2: BloodMNIST Training Montage</b></p>
 
 
 The datasets are accessible at [MedMNIST](https://medmnist.com/).
