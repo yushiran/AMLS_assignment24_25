@@ -29,9 +29,9 @@ from copy import deepcopy
 from tqdm import trange
 import matplotlib.pyplot as plt
 from linformer import Linformer
-import sys
+import sys,pickle
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from model import ResNet18,ViT
+from model import ResNet18,ViT,SVMModel
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -87,6 +87,7 @@ def A_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='R
     # train the model
     if train_or_test == 'train':
         return train(train_model,data_flag=data_flag,device=device,n_channels=n_channels,n_classes=n_classes,task=task,
+                    train_dataset = train_dataset,val_dataset = val_dataset,test_dataset = test_dataset,
                     train_loader=train_loader,val_loader=val_loader,test_loader=test_loader,
                     train_evaluator=train_evaluator,train_loader_at_eval=train_loader_at_eval,val_evaluator=val_evaluator,test_evaluator=test_evaluator)
     # test the model
@@ -100,6 +101,7 @@ def A_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='R
 
 def train(train_model:str,data_flag:str,device,
           n_channels,n_classes,
+          train_dataset,val_dataset,test_dataset,
           task,train_loader,train_loader_at_eval,val_loader,test_loader,
           train_evaluator,val_evaluator,test_evaluator):
     """
@@ -151,9 +153,45 @@ def train(train_model:str,data_flag:str,device,
                     transformer=efficient_transformer,
                     channels=n_channels,
                 )
-    elif train_model == 'VGG11':
-        lr = 0.001
-        model = AlexNetModel(in_channels=n_channels, num_classes=n_classes)
+    elif train_model == 'SVM':
+        model = SVMModel(kernel='linear', C=1.0)
+        X_train = []
+        y_train = []
+        for i in range(len(train_dataset)):
+            X_train.append(train_dataset[i][0].numpy().flatten())
+            y_train.append(train_dataset[i][1])
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
+        model.fit(X_train, y_train)
+        X_test = []
+        y_test = []
+        for i in range(len(test_dataset)):
+            X_test.append(test_dataset[i][0].numpy().flatten())
+            y_test.append(test_dataset[i][1])
+        X_test = np.array(X_test)
+        y_test = np.array(y_test)
+        predictions = model.predict(X_test)
+        y_score = torch.tensor([]).to(device)
+        predictions = torch.tensor(predictions).to(device)
+        y_score = torch.cat((y_score, predictions), 0)
+        y_score = y_score.detach().cpu().numpy()
+        auc, acc = test_evaluator.evaluate(y_score)
+        print(f'SVM metric: auc: {auc},acc: {acc}')
+        # Save SVM model
+        svm_model_path = os.path.join(output_root, 'svm_model.pkl')
+        with open(svm_model_path, 'wb') as f:
+            pickle.dump(model, f)
+
+        # Save SVM AUC and accuracy
+        svm_metrics = {
+            'auc': auc,
+            'acc': acc
+        }
+        svm_metrics_path = os.path.join(output_root, 'svm_metrics.txt')
+        with open(svm_metrics_path, 'w') as f:
+            for key, value in svm_metrics.items():
+                f.write(f"{key}: {value}\n")
+        return 0
     else:
         raise NotImplementedError
     
@@ -383,6 +421,25 @@ def inference(model_path, data_flag, device,
                     transformer=efficient_transformer,
                     channels=n_channels,
                 )
+    elif model_name == 'SVM':
+        svm_model_path = os.path.join(CURRENT_DIR, 'A_model', model_path, 'svm_model.pkl')
+        with open(svm_model_path, 'rb') as f:
+            model = pickle.load(f)
+        
+        X_test = []
+        y_test = []
+        for i in range(len(test_loader.dataset)):
+            X_test.append(test_loader.dataset[i][0].numpy().flatten())
+            y_test.append(test_loader.dataset[i][1])
+        X_test = np.array(X_test)
+        y_test = np.array(y_test)
+        predictions = model.predict(X_test)
+        y_score = torch.tensor(predictions).to(device)
+        y_score = y_score.detach().cpu().numpy()
+        auc, acc = test_evaluator.evaluate(y_score)
+        output_str = f"Task A, SVM model test auc: {auc} acc: {acc}"
+        print(output_str + '\n')
+        return output_str
     else:
         raise NotImplementedError
     model = model.to(device)
@@ -410,16 +467,16 @@ def inference(model_path, data_flag, device,
 
 
 if __name__ == '__main__':
-    # train_or_test = 'test'
-    train_or_test = 'train'
+    train_or_test = 'test'
+    # train_or_test = 'train'
     # train_model = 'ResNet18'
     # train_model = 'ViT'
-    train_model = 'VGG11'
+    train_model = 'SVM'
     BATCH_SIZE = 8
     data_flag = 'breastmnist'
     # model_path = 'ResNet18_2024-12-25 15:09:51.435892'
     # model_path = 'ViT_2024-12-25 15:12:32.084710'
-    model_path = 'VGG16_2024-12-25 15:09:51.435892'
+    model_path = 'SVM_2024-12-25 17:47:43.290416'
  
     A_main_function(BATCH_SIZE=BATCH_SIZE,
                     train_or_test=train_or_test, 

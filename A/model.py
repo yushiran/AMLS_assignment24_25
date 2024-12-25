@@ -3,6 +3,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
+from sklearn import svm
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
 
 class BasicBlock(nn.Module):
     '''
@@ -78,6 +81,23 @@ def ResNet18(in_channels, num_classes):
 def pair(t):
     return t if isinstance(t, tuple) else (t, t)
 
+class SVMModel:
+    '''
+    SVM model
+    '''
+    def __init__(self, kernel='linear', C=1.0):
+        self.model = make_pipeline(StandardScaler(), svm.SVC(kernel=kernel, C=C))
+
+    def fit(self, X, y):
+        self.model.fit(X, y)
+
+    def predict(self, X):
+        return self.model.predict(X)
+
+    def score(self, X, y):
+        return self.model.score(X, y)
+
+
 class ViT(nn.Module):
     '''
     Vision Transformer model
@@ -122,3 +142,19 @@ class ViT(nn.Module):
 
         x = self.to_latent(x)
         return self.mlp_head(x)
+    
+class RandomForestModel:
+    '''
+    Random Forest model
+    '''
+    def __init__(self, n_estimators=100, max_depth=None, random_state=0):
+        self.model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state)
+
+    def fit(self, X, y):
+        self.model.fit(X, y)
+
+    def predict(self, X):
+        return self.model.predict(X)
+
+    def predict_proba(self, X):
+        return self.model.predict_proba(X)

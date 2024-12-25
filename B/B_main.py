@@ -13,10 +13,10 @@ from copy import deepcopy
 from tqdm import trange
 import matplotlib.pyplot as plt
 from linformer import Linformer
-import sys
+import sys,pickle
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from model import ResNet18
-from model import ViT
+from B_model import ResNet18,ViT,RandomForestModel
 
 def B_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='ResNet18',data_flag:str = 'bloodmnist',model_path:str=None):
     """
@@ -70,6 +70,7 @@ def B_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='R
     # train the model
     if train_or_test == 'train':
         return train(train_model,data_flag=data_flag,device=device,n_channels=n_channels,n_classes=n_classes,task=task,
+                    train_dataset = train_dataset,val_dataset = val_dataset,test_dataset = test_dataset,
                     train_loader=train_loader,train_loader_at_eval=train_loader_at_eval,val_loader=val_loader,test_loader=test_loader,
                     train_evaluator=train_evaluator,val_evaluator=val_evaluator,test_evaluator=test_evaluator)
     # test the model
@@ -83,6 +84,7 @@ def B_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='R
 
 def train(train_model:str,data_flag:str,device,
           n_channels,n_classes,
+            train_dataset,val_dataset,test_dataset,
           task,train_loader,train_loader_at_eval,val_loader,test_loader,
           train_evaluator,val_evaluator,test_evaluator):
     """
@@ -135,6 +137,49 @@ def train(train_model:str,data_flag:str,device,
                     transformer=efficient_transformer,
                     channels=n_channels,
                 )
+    elif train_model == 'RF':
+        model = RandomForestModel(n_estimators=100, random_state=42)
+        X_train = []
+        y_train = []
+        for i in range(len(train_dataset)):
+            X_train.append(train_dataset[i][0].numpy().flatten())
+            y_train.append(train_dataset[i][1])
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
+        model.fit(X_train, y_train)
+        
+        X_test = []
+        y_test = []
+        for i in range(len(test_dataset)):
+            X_test.append(test_dataset[i][0].numpy().flatten())
+            y_test.append(test_dataset[i][1])
+        X_test = np.array(X_test)
+        y_test = np.array(y_test)
+        
+        predictions = model.predict_proba(X_test)  # shape: (n_samples, n_classes)
+        # Move predictions to the correct device (if necessary)
+        y_score = torch.tensor(predictions).to(device)
+        # Convert to CPU and detach from the computational graph
+        y_score = y_score.detach().cpu().numpy()
+        # Evaluate using the test evaluator
+        auc, acc = test_evaluator.evaluate(y_score)
+        print(f'RF metric: auc: {auc}, acc: {acc}')
+        
+        # Save RF model
+        rf_model_path = os.path.join(output_root, 'rf_model.pkl')
+        with open(rf_model_path, 'wb') as f:
+            pickle.dump(model, f)
+
+        # Save RF AUC and accuracy
+        rf_metrics = {
+            'auc': auc,
+            'acc': acc
+        }
+        rf_metrics_path = os.path.join(output_root, 'rf_metrics.txt')
+        with open(rf_metrics_path, 'w') as f:
+            for key, value in rf_metrics.items():
+                f.write(f"{key}: {value}\n")
+        return 0
     else:
         raise NotImplementedError
     
@@ -365,6 +410,25 @@ def inference(model_path, data_flag, device,
                     transformer=efficient_transformer,
                     channels=n_channels,
                 )
+    elif model_name == 'RF':
+        rf_model_path = os.path.join(CURRENT_DIR, 'B_model', model_path, 'rf_model.pkl')
+        with open(rf_model_path, 'rb') as f:
+            model = pickle.load(f)
+        
+        X_test = []
+        y_test = []
+        for i in range(len(test_loader.dataset)):
+            X_test.append(test_loader.dataset[i][0].numpy().flatten())
+            y_test.append(test_loader.dataset[i][1])
+        X_test = np.array(X_test)
+        y_test = np.array(y_test)
+        predictions = model.predict_proba(X_test)
+        y_score = torch.tensor(predictions).to(device)
+        y_score = y_score.detach().cpu().numpy()
+        auc, acc = test_evaluator.evaluate(y_score)
+        output_str = f"Task B, RF model test auc: {auc} acc: {acc}"
+        print(output_str + '\n')
+        return output_str
     else:
         raise NotImplementedError
     model = model.to(device)
@@ -392,15 +456,17 @@ def inference(model_path, data_flag, device,
 
 
 if __name__ == '__main__':
-    # train_or_test = 'test'
-    train_or_test = 'train'
+    train_or_test = 'test'
+    # train_or_test = 'train'
     # train_model = 'ResNet18'
-    train_model = 'ViT'
+    # train_model = 'ViT'
+    train_model = 'RF'
     BATCH_SIZE = 128
     data_flag = 'bloodmnist'
     # model_path = 'ResNet18_2024-12-25 15:20:01.738181'
-    model_path = 'ViT_2024-12-25 15:36:47.570820'
- 
+    # model_path = 'ViT_2024-12-25 15:36:47.570820'
+    model_path = 'RF_2024-12-25 18:10:31.138830'
+
     B_main_function(BATCH_SIZE=BATCH_SIZE,
                     train_or_test=train_or_test, 
                     train_model=train_model, 

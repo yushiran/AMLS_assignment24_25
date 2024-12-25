@@ -47,3 +47,4 @@ einops
 vit_pytorch 
 linformer
 matplotlib
+pickle
