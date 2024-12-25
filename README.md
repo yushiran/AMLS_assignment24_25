@@ -62,12 +62,18 @@ In this project, two models were trained for these classification tasks: ResNet1
 
 To set up the conda environment for this project, follow these steps:
 
-1. **Create the Conda Environment**:
+1. **Clone the Project Repository**:
+    ```bash
+    git clone https://github.com/yourusername/AMLS_assignment24_25.git
+    cd AMLS_assignment24_25
+    ```
+
+2. **Create the Conda Environment**:
     ```bash
     conda env create -f environment.yml
     ```
 
-2. **Activate the Conda Environment**:
+3. **Activate the Conda Environment**:
     ```bash
     conda activate amls-final
     ```
