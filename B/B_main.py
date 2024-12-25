@@ -1,4 +1,5 @@
 import os,datetime
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 from tqdm import tqdm
 import numpy as np
 import torch
@@ -12,13 +13,12 @@ from copy import deepcopy
 from tqdm import trange
 import matplotlib.pyplot as plt
 from linformer import Linformer
-
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from model import ResNet18
 from model import ViT
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-def A_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='ResNet18',data_flag:str = 'bloodmnist',model_path:str=None):
+def B_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='ResNet18',data_flag:str = 'bloodmnist',model_path:str=None):
     gpu_ids = [0]  # Assuming you want to use the first GPU
     device = torch.device('cuda:{}'.format(gpu_ids[0])) if gpu_ids and torch.cuda.is_available() else torch.device('cpu')
     print(f"Using device: {device}")
@@ -280,7 +280,8 @@ def inference(model_path, data_flag, device,
 
     test_metrics = test(model, test_evaluator, test_loader, task, criterion, device)
 
-    print('test  auc: %.5f  acc: %.5f\n' % (test_metrics[1], test_metrics[2]))
+    output_str = f"Task B, {model_name} model test  auc: {test_metrics[1]}  acc: {test_metrics[2]}"
+    print(output_str+'\n')
 
     # Save test metrics to a text file
     output_root = f'{CURRENT_DIR}/B_model/{model_path}'
@@ -288,6 +289,8 @@ def inference(model_path, data_flag, device,
     with open(metrics_path, 'w') as f:
         f.write(f"Test AUC: {test_metrics[1]:.5f}\n")
         f.write(f"Test Accuracy: {test_metrics[2]:.5f}\n")
+
+    return output_str
 
 
 if __name__ == '__main__':
@@ -300,7 +303,7 @@ if __name__ == '__main__':
     # model_path = 'ResNet18_2024-12-25 01:26:31.548702'
     model_path = 'ViT_2024-12-25 01:39:40.440155'
  
-    A_main_function(BATCH_SIZE=BATCH_SIZE,
+    B_main_function(BATCH_SIZE=BATCH_SIZE,
                     train_or_test=train_or_test, 
                     train_model=train_model, 
                     data_flag=data_flag,

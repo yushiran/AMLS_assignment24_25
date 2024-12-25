@@ -12,7 +12,8 @@ from copy import deepcopy
 from tqdm import trange
 import matplotlib.pyplot as plt
 from linformer import Linformer
-
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from model import ResNet18
 from model import ViT
 
@@ -279,7 +280,8 @@ def inference(model_path, data_flag, device,
 
     test_metrics = test(model, test_evaluator, test_loader, task, criterion, device)
 
-    print('test  auc: %.5f  acc: %.5f\n' % (test_metrics[1], test_metrics[2]))
+    output_str = f"Task A, {model_name} model test  auc: {test_metrics[1]}  acc: {test_metrics[2]}"
+    print(output_str+'\n')
 
     # Save test metrics to a text file
     output_root = f'{CURRENT_DIR}/A_model/{model_path}'
@@ -287,6 +289,8 @@ def inference(model_path, data_flag, device,
     with open(metrics_path, 'w') as f:
         f.write(f"Test AUC: {test_metrics[1]:.5f}\n")
         f.write(f"Test Accuracy: {test_metrics[2]:.5f}\n")
+
+    return output_str
 
 
 if __name__ == '__main__':
