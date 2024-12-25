@@ -2,6 +2,18 @@ from A import *
 from B import *
 
 def main():
+    """
+    Main function to execute a series of model tests and print their outputs.
+    This function performs the following steps:
+    1. Initializes an empty list to store outputs.
+    2. Appends the result of testing the 'ResNet18' model on the 'breastmnist' dataset.
+    3. Appends the result of testing the 'ViT' model on the 'breastmnist' dataset.
+    4. Appends the result of testing the 'ResNet18' model on the 'bloodmnist' dataset.
+    5. Appends the result of testing the 'ViT' model on the 'bloodmnist' dataset.
+    6. Prints each output in the list.
+    Returns:
+        int: Always returns 0.
+    """
     output_list = []
 
     output_list.append(A_main.A_main_function(BATCH_SIZE=8,

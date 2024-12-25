@@ -5,6 +5,9 @@ from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 
 class BasicBlock(nn.Module):
+    '''
+    BasicBlock for ResNet18 and ResNet34
+    '''
     expansion = 1
 
     def __init__(self, in_planes, planes, stride=1):
@@ -33,6 +36,9 @@ class BasicBlock(nn.Module):
         return out
     
 class ResNet(nn.Module):
+    '''
+    ResNet model
+    '''
     def __init__(self, block, num_blocks, in_channels=1, num_classes=2):
         super(ResNet, self).__init__()
         self.in_planes = 64
@@ -73,6 +79,9 @@ def pair(t):
     return t if isinstance(t, tuple) else (t, t)
 
 class ViT(nn.Module):
+    '''
+    Vision Transformer model
+    '''
     def __init__(self, *, image_size, patch_size, num_classes, dim, transformer, pool = 'cls', channels = 3):
         super().__init__()
         image_size_h, image_size_w = pair(image_size)

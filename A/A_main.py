@@ -1,3 +1,20 @@
+"""
+A_main.py
+This script contains the main function for training and testing models on the MedMNIST dataset. 
+It supports two models: ResNet18 and Vision Transformer (ViT). The script includes functions 
+for data loading, model training, evaluation, and inference.
+Functions:
+    A_main_function(BATCH_SIZE: int, train_or_test: str = 'train', train_model: str = 'ResNet18', data_flag: str = 'breastmnist', model_path: str = None)
+        Main function to train or test the model.
+    train(train_model: str, data_flag: str, device, n_channels, n_classes, task, train_loader, val_loader, test_loader, train_evaluator, val_evaluator, test_evaluator)
+        Function to train the model.
+    test(model, evaluator, data_loader, task, criterion, device)
+        Function to evaluate the model on the validation or test dataset.
+    inference(model_path, data_flag, device, n_channels, n_classes, task, train_loader, val_loader, test_loader, train_evaluator, val_evaluator, test_evaluator)
+        Function to perform inference using a pre-trained model.
+Usage:
+    Run the script with the desired parameters to train or test the model on the MedMNIST dataset.
+"""
 import os,datetime
 from tqdm import tqdm
 import numpy as np
@@ -20,6 +37,18 @@ from model import ViT
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def A_main_function(BATCH_SIZE:int, train_or_test:str='train',train_model:str='ResNet18',data_flag:str = 'breastmnist',model_path:str=None):
+    """
+    Main function to train or test a model on the specified dataset.
+    Args:
+        BATCH_SIZE (int): The batch size for data loading.
+        train_or_test (str): Mode of operation, either 'train' or 'test'. Defaults to 'train'.
+        train_model (str): The model architecture to use for training. Defaults to 'ResNet18'.
+        data_flag (str): The dataset to use. Defaults to 'breastmnist'.
+        model_path (str, optional): Path to the pre-trained model for testing. Defaults to None.
+    Returns:
+        int: Returns 0 if neither training nor testing is performed.
+        Otherwise, returns the result of the train or inference function.
+    """
     gpu_ids = [0]  # Assuming you want to use the first GPU
     device = torch.device('cuda:{}'.format(gpu_ids[0])) if gpu_ids and torch.cuda.is_available() else torch.device('cpu')
     print(f"Using device: {device}")
@@ -74,6 +103,24 @@ def train(train_model:str,data_flag:str,device,
           n_channels,n_classes,
           task,train_loader,val_loader,test_loader,
           train_evaluator,val_evaluator,test_evaluator):
+    """
+    Function to train the model on the specified dataset.
+    Args:
+        train_model (str): The model architecture to use for training.
+        data_flag (str): The dataset to use.
+        device: The device to use for training.
+        n_channels (int): The number of input channels.
+        n_classes (int): The number of classes in the dataset.
+        task (str): The task type, e.g., 'multi-label, binary-class'.
+        train_loader (DataLoader): The DataLoader for the training dataset.
+        val_loader (DataLoader): The DataLoader for the validation dataset.
+        test_loader (DataLoader): The DataLoader for the test dataset.
+        train_evaluator (Evaluator): The Evaluator for the training dataset.
+        val_evaluator (Evaluator): The Evaluator for the validation dataset.
+        test_evaluator (Evaluator): The Evaluator for the test dataset.
+    Returns:
+        int: Returns 0 after training the model.
+    """
     NUM_EPOCHS = 100
     gamma=0.1
     milestones = [0.5 * NUM_EPOCHS, 0.75 * NUM_EPOCHS]
@@ -208,7 +255,18 @@ def train(train_model:str,data_flag:str,device,
     return 0 
 
 def test(model, evaluator, data_loader, task, criterion, device):
-
+    """
+    Function to evaluate the model on the validation or test dataset.
+    Args:
+        model: The model to evaluate.
+        evaluator: The Evaluator object for the dataset.
+        data_loader: The DataLoader for the dataset.
+        task: The task type, e.g., 'multi-label, binary-class'.
+        criterion: The loss function to use.
+        device: The device to use for evaluation.
+    Returns:
+        list: A list containing the test loss, AUC, and accuracy.
+    """
     model.eval()
     
     total_loss = []
@@ -245,7 +303,24 @@ def inference(model_path, data_flag, device,
             n_channels,n_classes,
             task,train_loader,val_loader,test_loader,
             train_evaluator,val_evaluator,test_evaluator):
-
+    """
+    Function to perform inference using a pre-trained model.
+    Args:
+        model_path (str): Path to the pre-trained model.
+        data_flag (str): The dataset to use.
+        device: The device to use for inference.
+        n_channels (int): The number of input channels.
+        n_classes (int): The number of classes in the dataset.
+        task (str): The task type, e.g., 'multi-label, binary-class'.
+        train_loader (DataLoader): The DataLoader for the training dataset.
+        val_loader (DataLoader): The DataLoader for the validation dataset.
+        test_loader (DataLoader): The DataLoader for the test dataset.
+        train_evaluator (Evaluator): The Evaluator for the training dataset.
+        val_evaluator (Evaluator): The Evaluator for the validation dataset.
+        test_evaluator (Evaluator): The Evaluator for the test dataset.
+    Returns:
+        str: A string containing the test AUC and accuracy.
+    """
     model_name = model_path.split('_')[0]
     print(f"Model name: {model_name}")
     if model_name == 'ResNet18':
