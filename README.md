@@ -1,5 +1,9 @@
 # AMLS_assignment24_25
 
+[![GitHub issues](https://img.shields.io/github/issues/yushiran/AMLS_assignment24_25)](https://github.com/yushiran/AMLS_assignment24_25/issues)
+[![GitHub stars](https://img.shields.io/github/stars/yushiran/AMLS_assignment24_25)](https://github.com/yushiran/AMLS_assignment24_25/stargazers)
+[![GitHub license](https://img.shields.io/github/license/yushiran/AMLS_assignment24_25)](https://github.com/yushiran/AMLS_assignment24_25/blob/main/LICENSE)
+
 ## Project Overview
 This project is part of the AMLS assignment for the academic year 2024-2025. It involves developing machine learning models to solve classification tasks using two datasets: BreastMNIST and BloodMNIST.
 
