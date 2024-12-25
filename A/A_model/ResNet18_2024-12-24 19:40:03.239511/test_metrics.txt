@@ -1,0 +1,2 @@
+Test AUC: 0.90946
+Test Accuracy: 0.85897
