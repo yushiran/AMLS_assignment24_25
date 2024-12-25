@@ -31,55 +31,32 @@ In this project, two models were trained for these classification tasks: ResNet1
 ## File Descriptions
 ### Root Directory
 ```plaintext
-.
-├── Datesets               # Directory for storing datasets.
-├── LICENSE                # License file for the project.
-├── README.md              # Project overview and instructions.
-├── environment.yml        # Conda environment configuration file.
-├── main.py                # Main script to run the project.
-└── requirements.txt       # List of required Python packages.
 ├── A
 │   ├── A_main.py          # Main script for Task A.
 │   ├── A_model            # Directory containing trained models and related files for Task A.
-│   │   ├── ResNet18_2024-12-24 19:40:03.239511
-│   │   │   ├── best_model.pth    # Best model weights.
-│   │   │   ├── loss_data.txt     # Training loss data.
-│   │   │   ├── loss_plot.png     # Plot of the training loss.
-│   │   │   └── test_metrics.txt  # Test metrics.
-│   │   └── ViT_2024-12-25 01:13:58.738999
-│   │       ├── best_model.pth    # Best model weights.
-│   │       ├── loss_data.txt     # Training loss data.
-│   │       ├── loss_plot.png     # Plot of the training loss.
-│   │       └── test_metrics.txt  # Test metrics.
+│   │   ├── ResNet18_2024-12-24 19:40:03.239511  # Directory for ResNet18 model trained on 2024-12-24.
+│   │   └── ViT_2024-12-25 01:13:58.738999       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the A module.
 │   ├── __pycache__         # Compiled Python files.
-│   │   ├── A_main.cpython-311.pyc
-│   │   ├── __init__.cpython-311.pyc
-│   │   └── model.cpython-311.pyc
 │   ├── docs                # Documentation and images related to Task A.
 │   │   └── breastmnist_train_montage.jpg  # Montage of training images for BreastMNIST.
 │   └── model.py            # Model definitions for Task A.
 ├── B
 │   ├── B_main.py          # Main script for Task B.
 │   ├── B_model            # Directory containing trained models and related files for Task B.
-│   │   ├── ResNet18_2024-12-25 01:26:31.548702
-│   │   │   ├── best_model.pth    # Best model weights.
-│   │   │   ├── loss_data.txt     # Training loss data.
-│   │   │   ├── loss_plot.png     # Plot of the training loss.
-│   │   │   └── test_metrics.txt  # Test metrics.
-│   │   └── ViT_2024-12-25 01:39:40.440155
-│   │       ├── best_model.pth    # Best model weights.
-│   │       ├── loss_data.txt     # Training loss data.
-│   │       ├── loss_plot.png     # Plot of the training loss.
-│   │       └── test_metrics.txt  # Test metrics.
+│   │   ├── ResNet18_2024-12-25 01:26:31.548702  # Directory for ResNet18 model trained on 2024-12-25.
+│   │   └── ViT_2024-12-25 01:39:40.440155       # Directory for ViT model trained on 2024-12-25.
 │   ├── __init__.py         # Initialization file for the B module.
 │   ├── __pycache__         # Compiled Python files.
-│   │   ├── B_main.cpython-311.pyc
-│   │   ├── __init__.cpython-311.pyc
-│   │   └── model.cpython-311.pyc
 │   ├── docs                # Documentation and images related to Task B.
 │   │   └── bloodmnist_train_montage.jpg  # Montage of training images for BloodMNIST.
 │   └── model.py            # Model definitions for Task B.
+├── Datasets               # Directory for storing datasets.
+├── LICENSE                # License file for the project.
+├── README.md              # Project overview and instructions.
+├── environment.yml        # Conda environment configuration file.
+├── main.py                # Main script to run the project.
+└── requirements.txt       # List of required Python packages.
 ```
 
 ## Conda Environment Setup
