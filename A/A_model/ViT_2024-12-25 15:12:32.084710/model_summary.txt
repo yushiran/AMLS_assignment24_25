@@ -1,0 +1,82 @@
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+         Rearrange-1               [-1, 49, 16]               0
+         LayerNorm-2               [-1, 49, 16]              32
+            Linear-3               [-1, 49, 32]             544
+         LayerNorm-4               [-1, 49, 32]              64
+         LayerNorm-5               [-1, 50, 32]              64
+            Linear-6               [-1, 50, 32]           1,024
+            Linear-7               [-1, 50, 32]           1,024
+            Linear-8               [-1, 50, 32]           1,024
+           Dropout-9            [-1, 4, 50, 16]               0
+           Linear-10               [-1, 50, 32]           1,056
+LinformerSelfAttention-11               [-1, 50, 32]               0
+          PreNorm-12               [-1, 50, 32]               0
+        LayerNorm-13               [-1, 50, 32]              64
+           Linear-14              [-1, 50, 128]           4,224
+             GELU-15              [-1, 50, 128]               0
+          Dropout-16              [-1, 50, 128]               0
+           Linear-17               [-1, 50, 32]           4,128
+      FeedForward-18               [-1, 50, 32]               0
+          PreNorm-19               [-1, 50, 32]               0
+        LayerNorm-20               [-1, 50, 32]              64
+           Linear-21               [-1, 50, 32]           1,024
+           Linear-22               [-1, 50, 32]           1,024
+           Linear-23               [-1, 50, 32]           1,024
+          Dropout-24            [-1, 4, 50, 16]               0
+           Linear-25               [-1, 50, 32]           1,056
+LinformerSelfAttention-26               [-1, 50, 32]               0
+          PreNorm-27               [-1, 50, 32]               0
+        LayerNorm-28               [-1, 50, 32]              64
+           Linear-29              [-1, 50, 128]           4,224
+             GELU-30              [-1, 50, 128]               0
+          Dropout-31              [-1, 50, 128]               0
+           Linear-32               [-1, 50, 32]           4,128
+      FeedForward-33               [-1, 50, 32]               0
+          PreNorm-34               [-1, 50, 32]               0
+        LayerNorm-35               [-1, 50, 32]              64
+           Linear-36               [-1, 50, 32]           1,024
+           Linear-37               [-1, 50, 32]           1,024
+           Linear-38               [-1, 50, 32]           1,024
+          Dropout-39            [-1, 4, 50, 16]               0
+           Linear-40               [-1, 50, 32]           1,056
+LinformerSelfAttention-41               [-1, 50, 32]               0
+          PreNorm-42               [-1, 50, 32]               0
+        LayerNorm-43               [-1, 50, 32]              64
+           Linear-44              [-1, 50, 128]           4,224
+             GELU-45              [-1, 50, 128]               0
+          Dropout-46              [-1, 50, 128]               0
+           Linear-47               [-1, 50, 32]           4,128
+      FeedForward-48               [-1, 50, 32]               0
+          PreNorm-49               [-1, 50, 32]               0
+        LayerNorm-50               [-1, 50, 32]              64
+           Linear-51               [-1, 50, 32]           1,024
+           Linear-52               [-1, 50, 32]           1,024
+           Linear-53               [-1, 50, 32]           1,024
+          Dropout-54            [-1, 4, 50, 16]               0
+           Linear-55               [-1, 50, 32]           1,056
+LinformerSelfAttention-56               [-1, 50, 32]               0
+          PreNorm-57               [-1, 50, 32]               0
+        LayerNorm-58               [-1, 50, 32]              64
+           Linear-59              [-1, 50, 128]           4,224
+             GELU-60              [-1, 50, 128]               0
+          Dropout-61              [-1, 50, 128]               0
+           Linear-62               [-1, 50, 32]           4,128
+      FeedForward-63               [-1, 50, 32]               0
+          PreNorm-64               [-1, 50, 32]               0
+SequentialSequence-65               [-1, 50, 32]               0
+        Linformer-66               [-1, 50, 32]               0
+         Identity-67                   [-1, 32]               0
+        LayerNorm-68                   [-1, 32]              64
+           Linear-69                    [-1, 2]              66
+================================================================
+Total params: 51,202
+Trainable params: 51,202
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.00
+Forward/backward pass size (MB): 1.28
+Params size (MB): 0.20
+Estimated Total Size (MB): 1.48
+----------------------------------------------------------------

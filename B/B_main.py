@@ -14,6 +14,7 @@ from tqdm import trange
 import matplotlib.pyplot as plt
 from linformer import Linformer
 import sys,pickle
+from torchsummary import summary
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from B_model import ResNet18,ViT,RandomForestModel
@@ -462,6 +463,20 @@ def inference(model_path, data_flag, device,
     with open(metrics_path, 'w') as f:
         f.write(f"Test AUC: {test_metrics[1]:.5f}\n")
         f.write(f"Test Accuracy: {test_metrics[2]:.5f}\n")
+
+    # # Save the model as ONNX format
+    # dummy_input = torch.randn(1, n_channels, 28, 28).to(device)  # Adjust the input size as needed
+    # onnx_path = os.path.join(output_root, 'model.onnx')
+    # torch.onnx.export(model, dummy_input, onnx_path)
+    # print(f"Model saved as ONNX format at {onnx_path}")
+
+    # Save the model summary to a text file
+    model_summary_path = os.path.join(output_root, 'model_summary.txt')
+    with open(model_summary_path, 'w') as f:
+        sys.stdout = f
+        summary(model, input_size=(n_channels, 28, 28))
+        sys.stdout = sys.__stdout__
+    print(f"Model summary saved to {model_summary_path}")
 
     return output_str
 

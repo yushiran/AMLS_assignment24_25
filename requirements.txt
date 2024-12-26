@@ -52,3 +52,8 @@ triton==3.1.0
 typing-extensions==4.12.2
 tzdata==2024.2
 vit-pytorch==1.9.0
+torchview
+graphviz
+onnx 
+onnxruntime
+torchsummary

@@ -33,6 +33,8 @@ import sys,pickle
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from model import ResNet18,ViT,SVMModel
 from sklearn.model_selection import learning_curve
+from torchview import draw_graph
+from torchsummary import summary
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -430,6 +432,7 @@ def inference(model_path, data_flag, device,
     print(f"Model name: {model_name}")
     if model_name == 'ResNet18':
         model =  ResNet18(in_channels=n_channels, num_classes=n_classes)
+
     elif model_name == 'ViT':
         feature_dim = 32
         efficient_transformer = Linformer(
@@ -489,6 +492,24 @@ def inference(model_path, data_flag, device,
         f.write(f"Test AUC: {test_metrics[1]:.5f}\n")
         f.write(f"Test Accuracy: {test_metrics[2]:.5f}\n")
 
+    # Save the model structure graph
+    dummy_input = torch.randn(1, n_channels, 28, 28).to(device)  # Adjust the input size as needed
+    model_graph = draw_graph(model, input_size=dummy_input.shape, expand_nested=True, save_graph=True, filename="torchview", directory=output_root)
+    model_graph.visual_graph.save(f"{output_root}/model_structure.png")
+
+    # # Save the model as ONNX format
+    # dummy_input = torch.randn(1, n_channels, 28, 28).to(device)  # Adjust the input size as needed
+    # onnx_path = os.path.join(output_root, 'model.onnx')
+    # torch.onnx.export(model, dummy_input, onnx_path)
+    # print(f"Model saved as ONNX format at {onnx_path}")
+
+    # Save the model summary to a text file
+    model_summary_path = os.path.join(output_root, 'model_summary.txt')
+    with open(model_summary_path, 'w') as f:
+        sys.stdout = f
+        summary(model, input_size=(n_channels, 28, 28))
+        sys.stdout = sys.__stdout__
+    print(f"Model summary saved to {model_summary_path}")
     return output_str
 
 
