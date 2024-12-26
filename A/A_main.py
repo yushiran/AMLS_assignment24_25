@@ -32,6 +32,7 @@ from linformer import Linformer
 import sys,pickle
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from model import ResNet18,ViT,SVMModel
+from sklearn.model_selection import learning_curve
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -190,7 +191,32 @@ def train(train_model:str,data_flag:str,device,
         svm_metrics_path = os.path.join(output_root, 'svm_metrics.txt')
         with open(svm_metrics_path, 'w') as f:
             for key, value in svm_metrics.items():
-                f.write(f"{key}: {value}\n")
+                f.write(f"{key}: {value}\n")        
+        
+        X_train = []
+        y_train = []
+        for i in range(len(train_dataset)):
+            X_train.append(train_dataset[i][0].numpy().flatten())
+            y_train.append(train_dataset[i][1])
+        X_train = np.array(X_train)
+        y_train = np.array(y_train)
+
+        train_sizes, train_scores, valid_scores = learning_curve(model.model, X_train, y_train, train_sizes=np.linspace(0.1, 1.0, 10))
+
+        plt.figure()
+        plt.plot(train_sizes, np.mean(train_scores, axis=1), 'r--', label='Training Accuracy')
+        plt.plot(train_sizes, np.mean(valid_scores, axis=1), 'b--', label='Validation Accuracy')
+        plt.xlabel('Training Size')
+        plt.ylabel('Accuracy')
+        plt.title("Learning Curve")
+        plt.legend()
+        plt.grid(True)
+
+        # Save the plot
+        learning_curve_path = os.path.join(output_root, 'learning_curve.png')
+        plt.savefig(learning_curve_path)
+        plt.close()
+
         return 0
     else:
         raise NotImplementedError
@@ -468,7 +494,7 @@ def inference(model_path, data_flag, device,
 
 if __name__ == '__main__':
     train_or_test = 'test'
-    # train_or_test = 'train'
+    train_or_test = 'train'
     # train_model = 'ResNet18'
     # train_model = 'ViT'
     train_model = 'SVM'
@@ -476,7 +502,7 @@ if __name__ == '__main__':
     data_flag = 'breastmnist'
     # model_path = 'ResNet18_2024-12-25 15:09:51.435892'
     # model_path = 'ViT_2024-12-25 15:12:32.084710'
-    model_path = 'SVM_2024-12-25 17:47:43.290416'
+    model_path = 'SVM_2024-12-26 15:24:20.126566'
  
     A_main_function(BATCH_SIZE=BATCH_SIZE,
                     train_or_test=train_or_test, 

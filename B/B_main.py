@@ -179,6 +179,17 @@ def train(train_model:str,data_flag:str,device,
         with open(rf_metrics_path, 'w') as f:
             for key, value in rf_metrics.items():
                 f.write(f"{key}: {value}\n")
+        
+        # Plot feature importances
+        importances = model.model.feature_importances_
+        indices = np.argsort(importances)[::-1]
+        plt.figure(figsize=(12, 6))
+        plt.title("Feature Importances")
+        plt.bar(range(len(importances)), importances[indices], align="center")
+        plt.xlabel("Feature Index")
+        plt.ylabel("Importance")
+        plt.savefig(os.path.join(output_root, 'feature_importances.png'))
+        plt.close()
         return 0
     else:
         raise NotImplementedError
@@ -456,8 +467,8 @@ def inference(model_path, data_flag, device,
 
 
 if __name__ == '__main__':
-    train_or_test = 'test'
-    # train_or_test = 'train'
+    # train_or_test = 'test'
+    train_or_test = 'train'
     # train_model = 'ResNet18'
     # train_model = 'ViT'
     train_model = 'RF'
@@ -465,7 +476,7 @@ if __name__ == '__main__':
     data_flag = 'bloodmnist'
     # model_path = 'ResNet18_2024-12-25 15:20:01.738181'
     # model_path = 'ViT_2024-12-25 15:36:47.570820'
-    model_path = 'RF_2024-12-25 18:10:31.138830'
+    model_path = 'RF_2024-12-26 15:32:53.442747'
 
     B_main_function(BATCH_SIZE=BATCH_SIZE,
                     train_or_test=train_or_test, 

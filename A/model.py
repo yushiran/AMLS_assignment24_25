@@ -96,6 +96,18 @@ class SVMModel:
 
     def score(self, X, y):
         return self.model.score(X, y)
+    
+    # def get_params(self, deep=True):
+    #     return {"kernel": self.kernel, "C": self.C}
+
+    # def set_params(self, **params):
+
+    #     for key, value in params.items():
+    #         setattr(self, key, value)
+
+    #     self.model = SVC(kernel=self.kernel, C=self.C)
+
+    #     return self
 
 
 class ViT(nn.Module):

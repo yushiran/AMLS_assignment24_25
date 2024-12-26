@@ -32,7 +32,7 @@ def main():
                                             train_or_test='test', 
                                             train_model='SVM', 
                                             data_flag='breastmnist',
-                                            model_path='SVM_2024-12-25 17:47:43.290416'))
+                                            model_path='SVM_2024-12-26 15:24:20.126566'))
 
     output_list.append(B_main.B_main_function(BATCH_SIZE=128,
                                             train_or_test='test', 
@@ -50,7 +50,7 @@ def main():
                                             train_or_test='test', 
                                             train_model='RF', 
                                             data_flag='bloodmnist',
-                                            model_path='RF_2024-12-25 18:10:31.138830'))
+                                            model_path='RF_2024-12-26 15:32:53.442747'))
     
     for output in output_list:
         print(output)
