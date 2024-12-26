@@ -493,9 +493,9 @@ def inference(model_path, data_flag, device,
         f.write(f"Test Accuracy: {test_metrics[2]:.5f}\n")
 
     # Save the model structure graph
-    dummy_input = torch.randn(1, n_channels, 28, 28).to(device)  # Adjust the input size as needed
-    model_graph = draw_graph(model, input_size=dummy_input.shape, expand_nested=True, save_graph=True, filename="torchview", directory=output_root)
-    model_graph.visual_graph.save(f"{output_root}/model_structure.png")
+    # dummy_input = torch.randn(1, n_channels, 28, 28).to(device)  # Adjust the input size as needed
+    # model_graph = draw_graph(model, input_size=dummy_input.shape, expand_nested=True, save_graph=True, filename="torchview", directory=output_root)
+    # model_graph.visual_graph.save(f"{output_root}/model_structure.png")
 
     # # Save the model as ONNX format
     # dummy_input = torch.randn(1, n_channels, 28, 28).to(device)  # Adjust the input size as needed
