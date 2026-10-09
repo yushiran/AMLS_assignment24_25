@@ -64,7 +64,7 @@ To set up the conda environment for this project, follow these steps:
 
 1. **Clone the Project Repository**:
     ```bash
-    git clone https://github.com/yushiran/AMLS_assignment24_25.git
+    git clone https://github.com/shiran-yu/AMLS_assignment24_25.git
     ```
     ```bash
     cd AMLS_assignment24_25
